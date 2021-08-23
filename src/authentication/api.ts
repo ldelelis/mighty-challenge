@@ -5,6 +5,7 @@ import jsonwebtoken from "jsonwebtoken";
 import { Strategy } from "passport-local";
 import { AuthUser } from "./models";
 import { GrammerService } from "../grammer/repositories";
+import { JWT_SECRET_KEY } from "../config";
 
 export const passportSetup = () => {
   passport.use('register', new Strategy({
@@ -46,8 +47,7 @@ export const passportSetup = () => {
   }));
 
   passport.use(new JWTStrategy({
-    // TODO: extract to env variable
-    secretOrKey: 'TOPSECRET',
+    secretOrKey: JWT_SECRET_KEY,
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
   },
   async (token, done) => {
@@ -79,8 +79,7 @@ authRouter.post('/login', async (req, res, next) => {
         }
 
         const jwtBody = { id: user.id, username: user.username };
-        // TODO: extract token secret to env variable
-        const token = jsonwebtoken.sign({ user: jwtBody }, 'TOPSECRET')
+        const token = jsonwebtoken.sign({ user: jwtBody }, JWT_SECRET_KEY)
 
         return res.json({ token })
       });

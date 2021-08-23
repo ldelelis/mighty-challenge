@@ -6,6 +6,7 @@ import { PostImageDTO, PostDTO, PostResponseDTO } from "./dtos";
 import { Grammer } from "../grammer/models";
 import { PaginatedResponse } from "../core/responses";
 import { LocalHandler } from "../core/files/local";
+import { PAGINATION_LIMIT } from "../config";
 
 export const postsRouter = express.Router();
 
@@ -69,9 +70,8 @@ postsRouter.get('/', async (req: Request, res: Response) => {
   const postService = new PostService();
 
   // TODO: extract to middleware
-  // TODO: extract constants to configuration
   // TODO: add boolean field to response to track whether current user liked each post
-  const limit = Number(req.query.limit || 1);
+  const limit = Number(req.query.limit || PAGINATION_LIMIT);
   const offset = Number(req.query.offset || 0);
 
   try {

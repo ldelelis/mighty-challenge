@@ -4,6 +4,7 @@ import passport from "passport";
 import { createConnection } from "typeorm";
 import { postsRouter } from "./post/api";
 import { authRouter, passportSetup } from "./authentication/api";
+import { SERVICE_PORT } from "./config";
 
 createConnection().then(_ => {
   const app = express();
@@ -13,10 +14,10 @@ createConnection().then(_ => {
   app.use('/', authRouter);
   app.use('/posts', passport.authenticate('jwt', { session: false }), postsRouter);
 
-  app.listen(8080, () => {
+  app.listen(SERVICE_PORT, () => {
     console.log("blablablaa listening");
   });
-}).catch(_ => console.error("ok something failed idk"));
+}).catch(exc => console.error(`ok something failed idk ${exc.stack}`));
 
 
 // TODO: RELATION CASCADES
