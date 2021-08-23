@@ -1,6 +1,6 @@
 version: '3'
-services:
 
+services:
   postgres:
     image: "postgres:11"
     ports:
@@ -9,4 +9,3 @@ services:
       POSTGRES_USER: "test"
       POSTGRES_PASSWORD: "test"
       POSTGRES_DB: "test"
-
