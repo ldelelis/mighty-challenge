@@ -1,20 +1,17 @@
-import { Service } from "typedi";
-import { Connection, Repository } from "typeorm";
+import { getRepository, Repository } from "typeorm";
 import { PostImage, Post, PostLike } from "./models";
 import { PostDTO, PostImageDTO } from "./dtos";
 import { Grammer } from "../grammer/models";
 
-@Service()
 export class PostService {
   private postImageRepository: Repository<PostImage>;
   private postRepository: Repository<Post>;
   private postLikeRepository: Repository<PostLike>;
 
-  // TODO: refactor using getRepository instead
-  constructor(private readonly connection: Connection) {
-    this.postRepository = connection.getRepository(Post);
-    this.postImageRepository = connection.getRepository(PostImage);
-    this.postLikeRepository = connection.getRepository(PostLike);
+  constructor() {
+    this.postRepository = getRepository(Post);
+    this.postImageRepository = getRepository(PostImage);
+    this.postLikeRepository = getRepository(PostLike);
   }
 
   public async getAllPosts(): Promise<Post[]> {

@@ -19,8 +19,6 @@ createConnection().then(_ => {
 }).catch(_ => console.error("ok something failed idk"));
 
 
-// TODO: LIKE AGGREGATION ON LIST
-// TODO: UNICITIY OF ENTITIES
 // TODO: RELATION CASCADES
 /// API
 // TODO: attempt to extract postService to common constant

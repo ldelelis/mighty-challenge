@@ -4,7 +4,6 @@ import { v4 } from "uuid";
 import { PostService } from "./repository";
 import { S3Handler } from "../core/files/s3";
 import { PostImageDTO, PostDTO, PostResponseDTO } from "./dtos";
-import { getConnection } from "typeorm";
 import { Grammer } from "../grammer/models";
 
 export const postsRouter = express.Router();
@@ -27,7 +26,7 @@ postsRouter.post('/', async (req: Request, res: Response) => {
   //
   // TODO: Abstract all this to helper class?
 
-  const postService = new PostService(getConnection())
+  const postService = new PostService();
   const author = req.user as Grammer;
 
   const {image, caption, description} = req.body;
@@ -58,7 +57,7 @@ postsRouter.post('/', async (req: Request, res: Response) => {
 postsRouter.put('/:id/like', async (req: Request, res: Response) => {
   const authUser = req.user as Grammer;
   const postId = req.params.id;
-  const postService = new PostService(getConnection());
+  const postService = new PostService();
 
   await postService.handleLike(postId, authUser);
 
@@ -66,7 +65,7 @@ postsRouter.put('/:id/like', async (req: Request, res: Response) => {
 });
 
 postsRouter.get('/', async (req: Request, res: Response) => {
-  const postService = new PostService(getConnection())
+  const postService = new PostService();
 
   try {
     const posts = await postService.getAllPosts();
