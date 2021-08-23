@@ -2,6 +2,7 @@ import { FindManyOptions, getRepository, Repository } from "typeorm";
 import { PostImage, Post, PostLike } from "./models";
 import { PostDTO, PostImageDTO } from "./dtos";
 import { Grammer } from "../grammer/models";
+import { LocalHandler } from "../core/files/local";
 
 export class PostService {
   private postImageRepository: Repository<PostImage>;
@@ -49,7 +50,7 @@ export class PostService {
     return await this.postLikeRepository.count({ post });
   }
 
-  public async createPost(body: PostDTO, author: Grammer): Promise<Post> {
+  public async createPost(body: PostDTO, author: Grammer, imageContent: string): Promise<Post> {
     const postImages = await Promise.all(body.images.map(async pi => await this.createPostImage(pi)));
 
     const newPost = new Post();
@@ -58,6 +59,7 @@ export class PostService {
     newPost.author = author;
 
     await this.postRepository.save(newPost);
+    await this.handlePostImage(imageContent, postImages[0].image);
 
     return newPost;
   }
@@ -94,5 +96,11 @@ export class PostService {
 
   private async unlikePost(postLikeId: number): Promise<void> {
     await this.postLikeRepository.delete(postLikeId);
+  }
+
+  private async handlePostImage(content: string, imagePath: string): Promise<void> {
+    const fileHandler = new LocalHandler();
+
+    fileHandler.upload_file(content, imagePath);
   }
 }

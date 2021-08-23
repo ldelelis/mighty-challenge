@@ -5,7 +5,6 @@ import { PostService } from "./repository";
 import { PostImageDTO, PostDTO, PostResponseDTO } from "./dtos";
 import { Grammer } from "../grammer/models";
 import { PaginatedResponse } from "../core/responses";
-import { LocalHandler } from "../core/files/local";
 import { PAGINATION_LIMIT } from "../config";
 
 export const postsRouter = express.Router();
@@ -18,24 +17,14 @@ export const postsRouter = express.Router();
  * @param {string} description
  */
 postsRouter.post('/', async (req: Request, res: Response) => {
-  // Base64 representation of the post's image
-  //
-  // We need to convert this to an actually persisted image
-  // and store its route
-  //
-  // An abstraction layer takes care of pointing to its source
-  // (hard drive, s3, etc.)
-  //
-  // TODO: Abstract all this to helper class?
-
   const postService = new PostService();
   const author = req.user as Grammer;
 
   const {image, caption, description} = req.body;
-  const fileHandler = new LocalHandler();
   const filePath = `images/${author.id}/${v4()}`;  // Generate uuid v4 string for path
-  fileHandler.upload_file(image, filePath);
 
+  // For the time being, we support single-image posts
+  // Although the domain was designed with multiple images per post in mind
   const postImageDto = new PostImageDTO(
     filePath,
     caption,
@@ -47,7 +36,7 @@ postsRouter.post('/', async (req: Request, res: Response) => {
   );
 
   try {
-    await postService.createPost(postDto, author);
+    await postService.createPost(postDto, author, image);
     res.status(200).json({});
   }
   catch (exc) {
