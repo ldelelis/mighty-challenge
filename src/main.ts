@@ -24,4 +24,3 @@ createConnection().then(_ => {
 // TODO: attempt to extract postService to common constant
 // TODO: input validation
 // TODO: rework entity variables as camelCase, column names as snake_case
-// TODO: pagination

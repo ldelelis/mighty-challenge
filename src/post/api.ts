@@ -5,10 +5,9 @@ import { PostService } from "./repository";
 import { S3Handler } from "../core/files/s3";
 import { PostImageDTO, PostDTO, PostResponseDTO } from "./dtos";
 import { Grammer } from "../grammer/models";
+import { PaginatedResponse } from "../core/responses";
 
 export const postsRouter = express.Router();
-
-const paginateResponse = content => content;
 
 /*
  * @param {base64} image
@@ -67,12 +66,16 @@ postsRouter.put('/:id/like', async (req: Request, res: Response) => {
 postsRouter.get('/', async (req: Request, res: Response) => {
   const postService = new PostService();
 
-  try {
-    const posts = await postService.getAllPosts();
-    // TODO: extract to responses file
-    const postsResponse = await Promise.all(posts.map(async post => new PostResponseDTO(post.id, post.description, post.images[0].caption, post.images[0].order, post.images[0].image, await postService.getPostLikeCount(post), post.created_at)))
+  // TODO: extract to middleware
+  const limit = Number(req.query.limit || 1);
+  const offset = Number(req.query.offset || 0);
 
-    res.status(200).json(paginateResponse(postsResponse));
+  try {
+    const [posts, count] = await postService.getAllPostsPaginated(limit, offset);
+    // TODO: extract to responses file
+    const postDtos = await Promise.all(posts.map(async post => new PostResponseDTO(post.id, post.description, post.images[0].caption, post.images[0].order, post.images[0].image, await postService.getPostLikeCount(post), post.created_at)))
+
+    res.status(200).json(new PaginatedResponse<PostResponseDTO>(count, postDtos));
   } catch (exc) {
     console.error(exc.stack);
     res.status(500).json({});

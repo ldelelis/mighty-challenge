@@ -1,6 +1,9 @@
-export interface PaginatedResponse<T> {
-  count: number;
-  next: string;
-  previous: string;
-  results: T[];
+export class PaginatedResponse<T> {
+  readonly count: number;
+  readonly data: T[];
+
+  constructor(count: number, data: T[]) {
+    this.count = count;
+    this.data = data;
+  }
 }

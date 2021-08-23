@@ -1,4 +1,4 @@
-import { getRepository, Repository } from "typeorm";
+import { FindManyOptions, getRepository, Repository } from "typeorm";
 import { PostImage, Post, PostLike } from "./models";
 import { PostDTO, PostImageDTO } from "./dtos";
 import { Grammer } from "../grammer/models";
@@ -14,8 +14,21 @@ export class PostService {
     this.postLikeRepository = getRepository(PostLike);
   }
 
-  public async getAllPosts(): Promise<Post[]> {
-    const posts = await this.postRepository.find({
+  public async getAllPostsPaginated(limit: number, offset: number): Promise<[Post[], number]> {
+    const pagination_options: FindManyOptions<Post> = {
+      take: limit,
+      skip: offset
+    };
+
+    return await this.getAllPosts(pagination_options);
+  }
+
+  public async getAllPosts(extra_options?: FindManyOptions<Post>): Promise<[Post[], number]> {
+    if (!extra_options) {
+      extra_options = {};
+    }
+
+    const [posts, count] = await this.postRepository.findAndCount({
       select: [
         "id", "description", "created_at", "images"
       ],
@@ -25,10 +38,11 @@ export class PostService {
       order: {
         created_at: 'DESC'
       },
-      relations: ['images']
+      relations: ['images'],
+      ...extra_options
     });
 
-    return posts;
+    return [posts, count];
   }
 
   public async getPostLikeCount(post: Post): Promise<number> {
