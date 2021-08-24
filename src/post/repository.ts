@@ -75,14 +75,14 @@ export class PostService {
     return postImage;
   }
 
-  public async handleLike(postId: string, grammer: Grammer): Promise<void> {
+  public async handleLike(postId: string | number, grammer: Grammer): Promise<void> {
     const post = await this.postRepository.findOne(postId);
     const postLike = await this.postLikeRepository.findOne({ post: post, grammer: grammer });
 
     if (!postLike) {
-      this.likePost(post, grammer);
+      await this.likePost(post, grammer);
     } else {
-      this.unlikePost(postLike.id);
+      await this.unlikePost(postLike.id);
     }
   }
 
@@ -91,7 +91,11 @@ export class PostService {
     postLike.post = post;
     postLike.grammer = grammer;
 
-    await this.postLikeRepository.save(postLike);
+    try {
+      await this.postLikeRepository.save(postLike);
+    } catch (exc) {
+      console.log(exc.stack)
+    }
   }
 
   private async unlikePost(postLikeId: number): Promise<void> {

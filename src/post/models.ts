@@ -39,7 +39,7 @@ export class PostImage {
   @Column()
   image: string;
 
-  @Column()
+  @Column({ default: "" })
   caption: string;
 
   @Column()

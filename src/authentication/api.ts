@@ -67,6 +67,7 @@ export const authRouter = Router();
 
 authRouter.post('/login', async (req, res, next) => {
   passport.authenticate('login', async (err, user: AuthUser) => {
+    // TODO: extract all this to service to better test things
     try {
       if (err) {
         console.error(err);

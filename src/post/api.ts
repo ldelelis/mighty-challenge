@@ -21,6 +21,14 @@ postsRouter.post('/', async (req: Request, res: Response) => {
   const author = req.user as Grammer;
 
   const {image, caption, description} = req.body;
+  // TODO: extract to validation layer
+  if (!image) {
+    return res.status(400).json({"detail": "image is required"});
+  }
+  if (!description) {
+    return res.status(400).json({"detail": "post description is required"});
+  }
+
   const filePath = `images/${author.id}/${v4()}`;  // Generate uuid v4 string for path
 
   // For the time being, we support single-image posts

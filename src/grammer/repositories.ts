@@ -11,9 +11,10 @@ export class GrammerService {
     this.authUserService = new AuthUserService();
   }
 
-  public async createGrammer(username: string, password: string): Promise<Grammer> {
-    // TODO: wrap this all in transaction
-    // if grammer creation fails, auth user creation should be rolled back
+  public async createGrammer(
+    username: string,
+    password: string
+  ): Promise<Grammer> {
     const authUser = await this.authUserService.register(username, password);
     const grammer = new Grammer();
     grammer.visible_name = username;

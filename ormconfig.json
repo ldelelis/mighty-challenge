@@ -1,4 +1,4 @@
-{
+[{
    "type": "postgres",
    "host": "localhost",
    "port": 5432,
@@ -21,4 +21,14 @@
       "migrationsDir": "src/migration",
       "subscribersDir": "src/subscriber"
    }
-}
+}, {
+  "name": "test",
+  "type": "sqlite",
+  "database": ":memory:",
+  "dropSchema": true,
+  "entities": [
+     "dist/**/models.js"
+  ],
+  "synchronize": true,
+  "logging": false
+}]

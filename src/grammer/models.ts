@@ -10,7 +10,7 @@ export class Grammer {
   @Column()
   visible_name: string;
 
-  @Column()
+  @Column({ default: "profile_picture.png "})
   profile_picture: string;
 
   @OneToOne(() => AuthUser)
