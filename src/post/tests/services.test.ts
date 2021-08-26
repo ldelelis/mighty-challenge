@@ -10,7 +10,7 @@ let postOldest: Post;
 let postNewest: Post;
 let postNonVisible: Post;
 
-beforeAll(async () => {
+beforeEach(async () => {
   const conn = await connection.create();
 
   grammer = new Grammer();
@@ -37,7 +37,7 @@ beforeAll(async () => {
   return conn;
 });
 
-afterAll(async () => {
+afterEach(async () => {
   return await connection.close();
 });
 
@@ -86,9 +86,6 @@ describe("Post service test cases", () => {
 
     expect(likesBeforeAct).toEqual(0);
     expect(likesAfterAct).toEqual(1);
-
-    // Cleanup for future tests
-    await getRepository(PostLike).delete({ post: postNonVisible });
   });
 
   test('handleLike should create like for unliked post', async () => {
@@ -98,9 +95,6 @@ describe("Post service test cases", () => {
     const likes = await postService.getPostLikeCount(postNonVisible);
 
     expect(likes).toEqual(1);
-
-    // Cleanup for future tests
-    await getRepository(PostLike).delete({ post: postNonVisible });
   });
 
   test('handleLike should remove like from liked post', async () => {
@@ -112,5 +106,21 @@ describe("Post service test cases", () => {
     const likes = await postService.getPostLikeCount(postNonVisible);
 
     expect(likes).toEqual(0);
+  });
+
+  test('isLikedByGrammer should return true for a post liked by a grammer', async () => {
+    const postService = new PostService();
+
+    await getRepository(PostLike).save({ post: postOldest, grammer: grammer });
+
+    expect(await postService.isLikedByGrammer(postOldest, grammer)).toBeTruthy();
+  });
+
+  test('isLikedByGrammer should return false for a post not liked by a grammer', async () => {
+    const postService = new PostService();
+
+    await getRepository(PostLike).save({ post: postOldest, grammer: grammer });
+
+    expect(await postService.isLikedByGrammer(postNewest, grammer)).toBeFalsy();
   });
 });

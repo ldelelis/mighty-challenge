@@ -13,7 +13,7 @@ export class Post {
   @Column({ default: true })
   is_visible: boolean;
 
-  @OneToMany(() => PostImage, image => image.post)
+  @OneToMany(() => PostImage, image => image.post, { cascade: true })
   images: PostImage[];
 
   @ManyToOne(() => Grammer, grammer => grammer.posts)

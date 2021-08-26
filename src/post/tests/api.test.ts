@@ -1,23 +1,26 @@
 import jsonwebtoken from "jsonwebtoken";
 import request from "supertest";
+import { getRepository } from "typeorm";
 import { app } from "../../app";
 import { JWT_SECRET_KEY } from "../../config";
 import { connection } from "../../core/tests/connection";
 import { Grammer } from "../../grammer/models";
 import { GrammerService } from "../../grammer/repositories";
+import { PostResponseDTO } from "../dtos";
+import { Post, PostLike } from "../models";
 
 let grammer: Grammer;
 let token: string;
 let grammerService: GrammerService;
 
-beforeAll(async () => {
+beforeEach(async () => {
   await connection.create();
   grammerService = new GrammerService();
   grammer = await grammerService.createGrammer("foo", "bar");
   token = jsonwebtoken.sign({ user: { id: grammer.auth_user.id, username: grammer.visible_name } }, JWT_SECRET_KEY);
 });
 
-afterAll(async () => {
+afterEach(async () => {
   return await connection.close();
 });
 
@@ -43,6 +46,25 @@ describe('Post API routes test cases', () => {
       .send(body);
 
     expect(response.status).toBe(400);
+  });
+
+  test('should flag if a post is liked by a grammer', async () => {
+    const bodyImage = { caption: "", order: 1, image: "asdf"}
+    const body = { description: "asdf", images: [bodyImage], author: grammer }
+    const firstPost = await getRepository(Post).save(body);
+    const secondPost = await getRepository(Post).save(body);
+    await getRepository(PostLike).save({ post: firstPost, author: grammer });
+
+    const response = await request(app)
+      .get('/posts/')
+      .set("Authorization", `Bearer ${token}`)
+      .send();
+    const responseBody = response.body.data;
+    const responseFirstPost = responseBody.find((x: PostResponseDTO) => x.id === firstPost.id)
+    const responseSecondPost = responseBody.find((x: PostResponseDTO) => x.id === secondPost.id)
+
+    expect(responseFirstPost).toHaveProperty("liked_by_grammer");
+    expect(responseSecondPost).toHaveProperty("liked_by_grammer");
   });
 
   // authz/authn

@@ -6,6 +6,7 @@ import { PostImageDTO, PostDTO, PostResponseDTO } from "./dtos";
 import { Grammer } from "../grammer/models";
 import { PaginatedResponse } from "../core/responses";
 import { PAGINATION_LIMIT } from "../config";
+import { ListPostsResponse } from "./responses";
 
 export const postsRouter = express.Router();
 
@@ -168,10 +169,13 @@ postsRouter.put('/:id/like', async (req: Request, res: Response) => {
  *                         type: string
  *                         format: date-time
  *                         description: creation date of the post
- *
+ *                       liked_by_grammer:
+ *                         type: boolean
+ *                         description: whether the user liked this post already
  */
 postsRouter.get('/', async (req: Request, res: Response) => {
   const postService = new PostService();
+  const grammer = req.user as Grammer;
 
   // TODO: extract to middleware
   // TODO: add boolean field to response to track whether current user liked each post
@@ -180,8 +184,7 @@ postsRouter.get('/', async (req: Request, res: Response) => {
 
   try {
     const [posts, count] = await postService.getAllPostsPaginated(limit, offset);
-    // TODO: extract to responses file
-    const postDtos = await Promise.all(posts.map(async post => new PostResponseDTO(post.id, post.description, post.images[0].caption, post.images[0].order, post.images[0].image, await postService.getPostLikeCount(post), post.created_at)))
+    const postDtos = await new ListPostsResponse().makeResponse(posts, grammer)
 
     res.status(200).json(new PaginatedResponse<PostResponseDTO>(count, postDtos));
   } catch (exc) {

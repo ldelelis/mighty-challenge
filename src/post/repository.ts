@@ -50,6 +50,10 @@ export class PostService {
     return await this.postLikeRepository.count({ post });
   }
 
+  public async isLikedByGrammer(post: Post, grammer: Grammer): Promise<boolean> {
+    return await this.postLikeRepository.count({ post, grammer }) === 1;
+  }
+
   public async createPost(body: PostDTO, author: Grammer, imageContent: string): Promise<Post> {
     const postImages = await Promise.all(body.images.map(async pi => await this.createPostImage(pi)));
 

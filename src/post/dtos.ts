@@ -28,15 +28,17 @@ export class PostResponseDTO {
   readonly description: string;
   readonly images: PostImageDTO[];
   readonly likes: number;
+  readonly liked_by_grammer: boolean;
 
   readonly created_at: Date;
 
-  constructor(id: number, description: string, caption: string, order: number, image: string, likes: number, created_at: Date) {
+  constructor(id: number, description: string, caption: string, order: number, image: string, likes: number, created_at: Date, likedByGrammer: boolean) {
     this.id = id;
     this.description = description;
     const imageDto = new PostImageDTO(image, caption, order);
     this.images = [imageDto];
     this.likes = likes;
     this.created_at = created_at;
+    this.liked_by_grammer = likedByGrammer;
   }
 }
