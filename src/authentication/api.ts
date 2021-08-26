@@ -7,7 +7,7 @@ import { AuthUser } from "./models";
 import { GrammerService } from "../grammer/repositories";
 import { JWT_SECRET_KEY } from "../config";
 
-export const passportSetup = () => {
+export const passportSetup = (): void => {
   passport.use('register', new Strategy({
     usernameField: "username",
     passwordField: "password"

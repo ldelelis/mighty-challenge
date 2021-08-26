@@ -1,6 +1,4 @@
-import { DTO } from "../core/dto";
-
-export class PostImageDTO implements DTO {
+export class PostImageDTO {
   readonly image: string
   readonly caption: string
   readonly order: number
@@ -13,7 +11,7 @@ export class PostImageDTO implements DTO {
 }
 
 
-export class PostDTO implements DTO {
+export class PostDTO {
   readonly description: string;
   readonly images: PostImageDTO[];
 

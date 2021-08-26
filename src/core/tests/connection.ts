@@ -1,7 +1,7 @@
 import { createConnection, getConnection } from "typeorm";
 
 export const connection = {
-  async create() {
+  async create(): Promise<void> {
     await createConnection({
       "name": "default",
       "type": "sqlite",
@@ -15,7 +15,7 @@ export const connection = {
     });
   },
 
-  async close() {
-    return await getConnection().close()
+  async close(): Promise<void> {
+    await getConnection().close()
   }
 }

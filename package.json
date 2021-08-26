@@ -9,7 +9,8 @@
       "serve": "node --inspect dist/main.js",
       "pretest": "yarn build",
       "test": "jest --roots dist",
-      "start": "node dist/main.js"
+      "start": "node dist/main.js",
+      "lint": "eslint . --ext .ts"
    },
    "dependencies": {
       "bcrypt": "^5.0.1",
@@ -36,6 +37,9 @@
       "@types/passport-local": "^1.0.34",
       "@types/supertest": "^2.0.11",
       "@types/uuid": "^8.3.1",
+      "@typescript-eslint/eslint-plugin": "^4.29.3",
+      "@typescript-eslint/parser": "^4.29.3",
+      "eslint": "^7.32.0",
       "jest": "^27.0.6",
       "nodemon": "^2.0.12",
       "sqlite3": "^5.0.2",
