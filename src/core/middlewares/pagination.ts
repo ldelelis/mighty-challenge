@@ -1,5 +1,6 @@
-import { PAGINATION_LIMIT } from "config"
 import { NextFunction, Request, Response } from "express";
+
+import { PAGINATION_LIMIT } from "config"
 
 export const paginationMiddleware = (req: Request, _: Response, next: NextFunction): void => {
   if (Number(req.query.limit) > PAGINATION_LIMIT || Number(req.query.limit) < 1) {

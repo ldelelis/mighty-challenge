@@ -1,14 +1,14 @@
 import { Router } from "express";
-import jsonwebtoken from "jsonwebtoken";
 import passport from "passport";
 import { ExtractJwt, Strategy as JWTStrategy } from "passport-jwt";
 import { Strategy } from "passport-local";
 
 import { JWT_SECRET_KEY } from "config";
+import { CREATED, SUCCESSFUL } from "core/constants/statuscode";
 import { GrammerService } from "grammer/repositories";
 
 import { AuthUser } from "./models";
-import { CREATED, SUCCESSFUL } from "core/constants/statuscode";
+import { AuthUserService } from "./repositories";
 
 export const passportSetup = (): void => {
   passport.use('register', new Strategy({
@@ -33,8 +33,6 @@ export const passportSetup = (): void => {
     usernameField: "username",
     passwordField: "password"
   }, async (username, password, done) => {
-    // TODO: this should be grammer service instead
-    // Create grammer, then auth user via signal, before insert
     const grammerService = new GrammerService();
 
     try {
@@ -65,7 +63,6 @@ export const passportSetup = (): void => {
   }));
 }
 
-// TODO: these views should be on grammer API
 export const authRouter = Router();
 
 /**
@@ -100,7 +97,6 @@ export const authRouter = Router();
  */
 authRouter.post('/login', async (req, res, next) => {
   passport.authenticate('login', async (err, user: AuthUser) => {
-    // TODO: extract all this to service to better test things
     try {
       if (err) {
         console.error(err);
@@ -111,9 +107,9 @@ authRouter.post('/login', async (req, res, next) => {
         if (error) {
           return next(error);
         }
+        const userService = new AuthUserService();
 
-        const jwtBody = { id: user.id, username: user.username };
-        const token = jsonwebtoken.sign({ user: jwtBody }, JWT_SECRET_KEY)
+        const token = userService.login(user.id, user.username);
 
         return res.status(SUCCESSFUL).json({ token })
       });

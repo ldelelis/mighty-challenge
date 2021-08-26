@@ -1,5 +1,8 @@
 import bcrypt from "bcrypt";
+import jsonwebtoken from "jsonwebtoken";
 import { getRepository, Repository } from "typeorm";
+
+import { JWT_SECRET_KEY } from "config";
 
 import { AuthUser } from "./models";
 
@@ -8,6 +11,12 @@ export class AuthUserService {
 
   constructor() {
     this.authUserRepository = getRepository(AuthUser);
+  }
+
+  public async login(userId: number, username: string): Promise<string> {
+    const jwtBody = { id: userId, username: username };
+
+    return jsonwebtoken.sign({ user: jwtBody }, JWT_SECRET_KEY);
   }
 
   public async register(username: string, password: string): Promise<AuthUser> {
