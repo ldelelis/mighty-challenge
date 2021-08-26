@@ -9,12 +9,47 @@ import { PAGINATION_LIMIT } from "../config";
 
 export const postsRouter = express.Router();
 
-// TODO: document all endpoints with swagger-compatible format
+// TODO: extract responses to new layer
 
-/*
- * @param {base64} image
- * @param {string} caption
- * @param {string} description
+/**
+ * @swagger
+ * /posts:
+ *   post:
+ *     summary: creates a post with a description and image
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *                 description: base64 encoded image
+ *                 required: true
+ *               description:
+ *                 type: string
+ *                 description: text body of the post
+ *                 required: true
+ *               caption:
+ *                 type: string
+ *                 description: accessibility friendly caption for the image
+ *     responses:
+ *       201:
+ *         description: successful empty response
+ *       400:
+ *         description: validation error with request body
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 detail:
+ *                   type: string
+ *                   description: detail of the validation error
+ *       500:
+ *         description: an unexpected error ocurred. consult with your friendly neighbor backend dev
  */
 postsRouter.post('/', async (req: Request, res: Response) => {
   const postService = new PostService();
@@ -45,7 +80,7 @@ postsRouter.post('/', async (req: Request, res: Response) => {
 
   try {
     await postService.createPost(postDto, author, image);
-    res.status(200).json({});
+    res.status(201).json({});
   }
   catch (exc) {
     console.error(exc.stack)
@@ -53,16 +88,88 @@ postsRouter.post('/', async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * @swagger
+ * /posts/{id}/like:
+ *   put:
+ *     summary: creates a post with a description and image
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: post ID
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description: empty response for correct handling
+ *       500:
+ *         description: an unexpected error ocurred. consult with your friendly neighbor backend dev
+ */
 postsRouter.put('/:id/like', async (req: Request, res: Response) => {
   const authUser = req.user as Grammer;
   const postId = req.params.id;
   const postService = new PostService();
 
-  await postService.handleLike(postId, authUser);
+  try {
+    await postService.handleLike(postId, authUser);
 
-  res.status(204).send();
+    res.status(204).send();
+  } catch (exc) {
+    console.error(exc.stack);
+
+    res.status(500).json({});
+  }
 });
 
+/**
+ * @swagger
+ * /posts:
+ *   get:
+ *     summary: lists all visible posts in chronological order
+ *     responses:
+ *       200:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 count:
+ *                   type: integer
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       description:
+ *                         type: string
+ *                         example: "look at my cute puppy #dog"
+ *                       images:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *                           properties:
+ *                             image:
+ *                               type: string
+ *                               description: path to fetch the image from
+ *                             caption:
+ *                               type: string
+ *                               description: accessibility friendly caption for the image
+ *                             order:
+ *                               type: integer
+ *                               description: order of the image in the post
+ *                       likes:
+ *                         type: integer
+ *                         description: amount of likes in a post
+ *                       created_at:
+ *                         type: string
+ *                         format: date-time
+ *                         description: creation date of the post
+ *
+ */
 postsRouter.get('/', async (req: Request, res: Response) => {
   const postService = new PostService();
 
@@ -79,6 +186,7 @@ postsRouter.get('/', async (req: Request, res: Response) => {
     res.status(200).json(new PaginatedResponse<PostResponseDTO>(count, postDtos));
   } catch (exc) {
     console.error(exc.stack);
+
     res.status(500).json({});
   }
 });

@@ -5,13 +5,14 @@ import { app } from "./app";
 
 createConnection(process.env.NODE_ENV || "default").then(_ => {
   app.listen(SERVICE_PORT, () => {
-    console.log("blablablaa listening");
+    console.log(`Listening on port ${SERVICE_PORT}`);
   });
-}).catch(exc => console.error(`ok something failed idk ${exc.stack}`));
+}).catch(exc => {
+  console.error(`Error during application startup: ${exc.stack}`)
+});
 
 
 // TODO: RELATION CASCADES
 /// API
 // TODO: attempt to extract postService to common constant
-// TODO: input validation
 // TODO: rework entity variables as camelCase, column names as snake_case

@@ -65,13 +65,43 @@ export const passportSetup = () => {
 // TODO: these views should be on grammer API
 export const authRouter = Router();
 
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: logs into an existing account
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: successful login token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   description: JWT token to use with bearer authentication
+ *       500:
+ *         description: unexpected server error
+ */
 authRouter.post('/login', async (req, res, next) => {
   passport.authenticate('login', async (err, user: AuthUser) => {
     // TODO: extract all this to service to better test things
     try {
       if (err) {
         console.error(err);
-        return next(new Error("login error occurred boo"));
+        return next(new Error("Unexpected error during login"));
       }
 
       req.login(user, { session: false }, async (error) => {
@@ -82,7 +112,7 @@ authRouter.post('/login', async (req, res, next) => {
         const jwtBody = { id: user.id, username: user.username };
         const token = jsonwebtoken.sign({ user: jwtBody }, JWT_SECRET_KEY)
 
-        return res.json({ token })
+        return res.status(200).json({ token })
       });
     } catch (exc) {
       console.error("error during login");
@@ -93,10 +123,26 @@ authRouter.post('/login', async (req, res, next) => {
   })(req, res, next);
 });
 
-/*
- * @param {string} username
- * @param {string} password
+/**
+ * @swagger
+ * /register:
+ *   post:
+ *     summary: creates a new account
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: empty successful response
  */
 authRouter.post('/register', passport.authenticate('register', { session: false }) , async (_, res) => {
-  res.status(200).json({});
+  res.status(201).send();
 });

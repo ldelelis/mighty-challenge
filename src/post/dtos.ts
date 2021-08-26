@@ -26,9 +26,7 @@ export class PostDTO implements DTO {
 export class PostResponseDTO {
   readonly id: number;
   readonly description: string;
-  readonly caption: string;
-  readonly order: number;
-  readonly image: string;
+  readonly images: PostImageDTO[];
   readonly likes: number;
 
   readonly created_at: Date;
@@ -36,9 +34,8 @@ export class PostResponseDTO {
   constructor(id: number, description: string, caption: string, order: number, image: string, likes: number, created_at: Date) {
     this.id = id;
     this.description = description;
-    this.caption = caption;
-    this.order = order;
-    this.image = image;
+    const imageDto = new PostImageDTO(image, caption, order);
+    this.images = [imageDto];
     this.likes = likes;
     this.created_at = created_at;
   }

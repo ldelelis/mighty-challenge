@@ -22,6 +22,7 @@ export class AuthUserService {
   public async getUserByUsernameAndPassword(username: string, password: string): Promise<AuthUser> {
     const authUser = await this.authUserRepository.findOne({ username });
     if (! await bcrypt.compare(password, authUser.password)) {
+      // TODO: custom invalid password error
       throw new Error("invalid username or password");
     }
 
