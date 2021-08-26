@@ -8,6 +8,7 @@ import { JWT_SECRET_KEY } from "config";
 import { GrammerService } from "grammer/repositories";
 
 import { AuthUser } from "./models";
+import { CREATED, SUCCESSFUL } from "core/constants/statuscode";
 
 export const passportSetup = (): void => {
   passport.use('register', new Strategy({
@@ -114,7 +115,7 @@ authRouter.post('/login', async (req, res, next) => {
         const jwtBody = { id: user.id, username: user.username };
         const token = jsonwebtoken.sign({ user: jwtBody }, JWT_SECRET_KEY)
 
-        return res.status(200).json({ token })
+        return res.status(SUCCESSFUL).json({ token })
       });
     } catch (exc) {
       console.error("error during login");
@@ -146,5 +147,5 @@ authRouter.post('/login', async (req, res, next) => {
  *         description: empty successful response
  */
 authRouter.post('/register', passport.authenticate('register', { session: false }) , async (_, res) => {
-  res.status(201).send();
+  res.status(CREATED).send();
 });

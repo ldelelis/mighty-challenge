@@ -8,10 +8,9 @@ import { PostImageDTO, PostDTO, PostResponseDTO } from "./dtos";
 import { PostService } from "./repository";
 import { ListPostsResponse } from "./responses";
 import { paginationMiddleware } from "core/middlewares/pagination";
+import { BAD_REQUEST, CREATED, INTERNAL_SERVER_ERROR, NO_CONTENT, SUCCESSFUL } from "core/constants/statuscode";
 
 export const postsRouter = express.Router();
-
-// TODO: extract responses to new layer
 
 /**
  * @swagger
@@ -60,10 +59,12 @@ postsRouter.post('/', async (req: Request, res: Response) => {
   const {image, caption, description} = req.body;
   // TODO: extract to validation layer
   if (!image) {
-    return res.status(400).json({"detail": "image is required"});
+    return res.status(BAD_REQUEST)
+              .json({"detail": "image is required"});
   }
   if (!description) {
-    return res.status(400).json({"detail": "post description is required"});
+    return res.status(BAD_REQUEST)
+              .json({"detail": "post description is required"});
   }
 
   const filePath = `images/${author.id}/${v4()}`;  // Generate uuid v4 string for path
@@ -82,11 +83,11 @@ postsRouter.post('/', async (req: Request, res: Response) => {
 
   try {
     await postService.createPost(postDto, author, image);
-    res.status(201).json({});
+    res.status(CREATED).json({});
   }
   catch (exc) {
     console.error(exc.stack)
-    res.status(500).json({});
+    res.status(INTERNAL_SERVER_ERROR).json({});
   }
 });
 
@@ -116,11 +117,11 @@ postsRouter.put('/:id/like', async (req: Request, res: Response) => {
   try {
     await postService.handleLike(postId, authUser);
 
-    res.status(204).send();
+    res.status(NO_CONTENT).send();
   } catch (exc) {
     console.error(exc.stack);
 
-    res.status(500).json({});
+    res.status(INTERNAL_SERVER_ERROR).json({});
   }
 });
 
@@ -185,10 +186,10 @@ postsRouter.get('/', paginationMiddleware, async (req: Request, res: Response) =
     );
     const postDtos = await new ListPostsResponse().makeResponse(posts, grammer)
 
-    res.status(200).json(new PaginatedResponse<PostResponseDTO>(count, postDtos));
+    res.status(SUCCESSFUL).json(new PaginatedResponse<PostResponseDTO>(count, postDtos));
   } catch (exc) {
     console.error(exc.stack);
 
-    res.status(500).json({});
+    res.status(INTERNAL_SERVER_ERROR).json({});
   }
 });
