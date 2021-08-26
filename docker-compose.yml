@@ -1,6 +1,17 @@
 version: '3'
 
 services:
+  api:
+    build: .
+    environment:
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      SERVICE_PORT: ${SERVICE_PORT}
+    ports:
+      - ${SERVICE_PORT}:${SERVICE_PORT}
+    command: yarn start
+    depends_on:
+      - postgres
+
   postgres:
     image: "postgres:11"
     ports:

@@ -22,13 +22,27 @@
       "subscribersDir": "src/subscriber"
    }
 }, {
-  "name": "test",
-  "type": "sqlite",
-  "database": ":memory:",
-  "dropSchema": true,
+  "name": "production",
+  "type": "postgres",
+  "host": "postgres",
+  "port": 5432,
+  "username": "test",
+  "password": "test",
+  "database": "test",
+  "synchronize": false,
+  "logging": false,
   "entities": [
      "dist/**/models.js"
   ],
-  "synchronize": true,
-  "logging": false
+  "migrations": [
+     "dist/migration/**/*.js"
+  ],
+  "subscribers": [
+     "src/subscriber/**/*.ts"
+  ],
+  "cli": {
+     "entitiesDir": "src/**",
+     "migrationsDir": "src/migration",
+     "subscribersDir": "src/subscriber"
+  }
 }]
