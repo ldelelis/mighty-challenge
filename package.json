@@ -7,8 +7,7 @@
       "build": "tsc",
       "dev": "nodemon --ext ts --exec 'yarn build && yarn serve'",
       "serve": "node --inspect dist/main.js",
-      "pretest": "yarn build",
-      "test": "jest --roots dist",
+      "test": "jest",
       "start": "node dist/main.js",
       "lint": "eslint . --ext .ts"
    },
@@ -46,6 +45,7 @@
       "nodemon": "^2.0.12",
       "sqlite3": "^5.0.2",
       "supertest": "^6.1.6",
+      "ts-jest": "^27.0.5",
       "ts-node": "3.3.0",
       "tslint": "^6.1.3",
       "typescript": "4.3.5"

@@ -10,7 +10,7 @@ export const connection = {
       "synchronize": true,
       "logging": false,
       "entities": [
-        "dist/**/models.js"
+        "src/**/models.ts"
       ]
     });
   },
