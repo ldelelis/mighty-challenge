@@ -9,7 +9,7 @@
       "serve": "node --inspect dist/main.js",
       "pretest": "yarn build",
       "test": "jest --roots dist",
-      "start": "ts-node src/index.ts"
+      "start": "node dist/main.js"
    },
    "dependencies": {
       "bcrypt": "^5.0.1",
