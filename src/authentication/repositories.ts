@@ -3,6 +3,7 @@ import jsonwebtoken from "jsonwebtoken";
 import { getRepository, Repository } from "typeorm";
 
 import { JWT_SECRET_KEY } from "config";
+import { InvalidPasswordError } from "core/exceptions";
 
 import { AuthUser } from "./models";
 
@@ -32,8 +33,7 @@ export class AuthUserService {
   public async getUserByUsernameAndPassword(username: string, password: string): Promise<AuthUser> {
     const authUser = await this.authUserRepository.findOne({ username });
     if (! await bcrypt.compare(password, authUser.password)) {
-      // TODO: custom invalid password error
-      throw new Error("invalid username or password");
+      throw new InvalidPasswordError("invalid username or password");
     }
 
     return authUser;
