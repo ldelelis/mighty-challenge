@@ -1,13 +1,13 @@
 import express, { Request, Response } from "express";
 import { v4 } from "uuid";
 
-import { PAGINATION_LIMIT } from "config";
 import { PaginatedResponse } from "core/responses";
 import { Grammer } from "grammer/models";
 
 import { PostImageDTO, PostDTO, PostResponseDTO } from "./dtos";
 import { PostService } from "./repository";
 import { ListPostsResponse } from "./responses";
+import { paginationMiddleware } from "core/middlewares/pagination";
 
 export const postsRouter = express.Router();
 
@@ -174,17 +174,15 @@ postsRouter.put('/:id/like', async (req: Request, res: Response) => {
  *                         type: boolean
  *                         description: whether the user liked this post already
  */
-postsRouter.get('/', async (req: Request, res: Response) => {
+postsRouter.get('/', paginationMiddleware, async (req: Request, res: Response) => {
   const postService = new PostService();
   const grammer = req.user as Grammer;
 
-  // TODO: extract to middleware
-  // TODO: add boolean field to response to track whether current user liked each post
-  const limit = Number(req.query.limit || PAGINATION_LIMIT);
-  const offset = Number(req.query.offset || 0);
-
   try {
-    const [posts, count] = await postService.getAllPostsPaginated(limit, offset);
+    const [posts, count] = await postService.getAllPostsPaginated(
+      Number(req.query.limit),
+      Number(req.query.offset)
+    );
     const postDtos = await new ListPostsResponse().makeResponse(posts, grammer)
 
     res.status(200).json(new PaginatedResponse<PostResponseDTO>(count, postDtos));
