@@ -1,8 +1,9 @@
 import { getRepository, Repository } from "typeorm";
-import { connection } from "../../core/tests/connection";
-import { Grammer } from "../../grammer/models";
-import { Post, PostLike } from "../models";
-import { PostService } from "../repository";
+
+import { connection } from "core/tests/connection";
+import { Grammer } from "grammer/models";
+import { Post, PostLike } from "post/models";
+import { PostService } from "post/repository";
 
 let grammer: Grammer;
 let postRepository: Repository<Post>;

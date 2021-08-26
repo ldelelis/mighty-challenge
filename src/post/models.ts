@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from "typeorm";
-import { Grammer } from "../grammer/models";
+
+import { Grammer } from "grammer/models";
 
 
 @Entity()

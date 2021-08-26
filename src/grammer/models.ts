@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { AuthUser } from "../authentication/models";
-import { Post } from "../post/models";
+
+import { AuthUser } from "authentication/models";
+import { Post } from "post/models";
 
 @Entity()
 export class Grammer {

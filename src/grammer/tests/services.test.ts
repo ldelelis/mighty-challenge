@@ -1,5 +1,5 @@
-import { connection } from "../../core/tests/connection";
-import { GrammerService } from "../repositories";
+import { connection } from "core/tests/connection";
+import { GrammerService } from "grammer/repositories";
 
 beforeAll(async () => {
   await connection.create();

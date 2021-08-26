@@ -1,13 +1,14 @@
 import jsonwebtoken from "jsonwebtoken";
 import request from "supertest";
 import { getRepository } from "typeorm";
-import { app } from "../../app";
-import { JWT_SECRET_KEY } from "../../config";
-import { connection } from "../../core/tests/connection";
-import { Grammer } from "../../grammer/models";
-import { GrammerService } from "../../grammer/repositories";
-import { PostResponseDTO } from "../dtos";
-import { Post, PostLike } from "../models";
+
+import { app } from "app";
+import { JWT_SECRET_KEY } from "config";
+import { connection } from "core/tests/connection";
+import { Grammer } from "grammer/models";
+import { GrammerService } from "grammer/repositories";
+import { PostResponseDTO } from "post/dtos";
+import { Post, PostLike } from "post/models";
 
 let grammer: Grammer;
 let token: string;

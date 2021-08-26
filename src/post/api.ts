@@ -1,11 +1,12 @@
 import express, { Request, Response } from "express";
 import { v4 } from "uuid";
 
-import { PostService } from "./repository";
+import { PAGINATION_LIMIT } from "config";
+import { PaginatedResponse } from "core/responses";
+import { Grammer } from "grammer/models";
+
 import { PostImageDTO, PostDTO, PostResponseDTO } from "./dtos";
-import { Grammer } from "../grammer/models";
-import { PaginatedResponse } from "../core/responses";
-import { PAGINATION_LIMIT } from "../config";
+import { PostService } from "./repository";
 import { ListPostsResponse } from "./responses";
 
 export const postsRouter = express.Router();

@@ -1,7 +1,8 @@
 import "reflect-metadata";
 import { createConnection } from "typeorm";
-import { SERVICE_PORT } from "./config";
-import { app } from "./app";
+
+import { app } from "app";
+import { SERVICE_PORT } from "config";
 
 createConnection(process.env.NODE_ENV || "default").then(_ => {
   app.listen(SERVICE_PORT, () => {

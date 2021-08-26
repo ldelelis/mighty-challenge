@@ -1,7 +1,8 @@
 import { getRepository, QueryFailedError } from "typeorm";
-import { connection } from "../../core/tests/connection";
-import { Grammer } from "../../grammer/models";
-import { Post, PostImage, PostLike } from "../models";
+
+import { connection } from "core/tests/connection";
+import { Grammer } from "grammer/models";
+import { Post, PostImage, PostLike } from "post/models";
 
 let post: Post;
 let grammer: Grammer;

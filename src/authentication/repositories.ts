@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import { getRepository, Repository } from "typeorm";
+
 import { AuthUser } from "./models";
 
 export class AuthUserService {

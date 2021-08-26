@@ -1,4 +1,5 @@
-import { Grammer } from "../grammer/models";
+import { Grammer } from "grammer/models";
+
 import { PostResponseDTO } from "./dtos";
 import { Post } from "./models";
 import { PostService } from "./repository";

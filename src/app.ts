@@ -2,8 +2,9 @@ import express from "express";
 import passport from "passport";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import { authRouter, passportSetup } from "./authentication/api";
-import { postsRouter } from "./post/api";
+
+import { authRouter, passportSetup } from "authentication/api";
+import { postsRouter } from "post/api";
 
 const swaggerDefinition = {
   openapi: '3.0.0',  // OpenAPI Spec version

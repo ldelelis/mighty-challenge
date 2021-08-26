@@ -1,8 +1,10 @@
 import { FindManyOptions, getRepository, Repository } from "typeorm";
-import { PostImage, Post, PostLike } from "./models";
+
+import { LocalHandler } from "core/files/local";
+import { Grammer } from "grammer/models";
+
 import { PostDTO, PostImageDTO } from "./dtos";
-import { Grammer } from "../grammer/models";
-import { LocalHandler } from "../core/files/local";
+import { PostImage, Post, PostLike } from "./models";
 
 export class PostService {
   private postImageRepository: Repository<PostImage>;

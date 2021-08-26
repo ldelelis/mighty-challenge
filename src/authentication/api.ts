@@ -1,11 +1,13 @@
 import { Router } from "express";
+import jsonwebtoken from "jsonwebtoken";
 import passport from "passport";
 import { ExtractJwt, Strategy as JWTStrategy } from "passport-jwt";
-import jsonwebtoken from "jsonwebtoken";
 import { Strategy } from "passport-local";
+
+import { JWT_SECRET_KEY } from "config";
+import { GrammerService } from "grammer/repositories";
+
 import { AuthUser } from "./models";
-import { GrammerService } from "../grammer/repositories";
-import { JWT_SECRET_KEY } from "../config";
 
 export const passportSetup = (): void => {
   passport.use('register', new Strategy({
