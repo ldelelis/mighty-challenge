@@ -6,7 +6,7 @@ import { app } from "app";
 import { JWT_SECRET_KEY } from "config";
 import { connection } from "core/tests/connection";
 import { Grammer } from "grammer/models";
-import { GrammerService } from "grammer/repositories";
+import { GrammerService } from "grammer/services";
 import { PostResponseDTO } from "post/dtos";
 import { Post, PostLike } from "post/models";
 

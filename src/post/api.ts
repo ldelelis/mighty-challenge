@@ -7,8 +7,8 @@ import { PaginatedResponse } from "core/responses";
 import { Grammer } from "grammer/models";
 
 import { PostImageDTO, PostDTO, PostResponseDTO } from "./dtos";
-import { PostService } from "./repository";
 import { ListPostsResponse } from "./responses";
+import { PostService } from "./services";
 
 export const postsRouter = express.Router();
 
@@ -57,7 +57,6 @@ postsRouter.post('/', async (req: Request, res: Response) => {
   const author = req.user as Grammer;
 
   const {image, caption, description} = req.body;
-  // TODO: extract to validation layer
   if (!image) {
     return res.status(BAD_REQUEST)
               .json({"detail": "image is required"});

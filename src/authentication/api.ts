@@ -5,10 +5,10 @@ import { Strategy } from "passport-local";
 
 import { JWT_SECRET_KEY } from "config";
 import { CREATED, SUCCESSFUL } from "core/constants/statuscode";
-import { GrammerService } from "grammer/repositories";
+import { GrammerService } from "grammer/services";
 
 import { AuthUser } from "./models";
-import { AuthUserService } from "./repositories";
+import { AuthUserService } from "./services";
 
 export const passportSetup = (): void => {
   passport.use('register', new Strategy({

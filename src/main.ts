@@ -11,9 +11,3 @@ createConnection(process.env.NODE_ENV || "default").then(_ => {
 }).catch(exc => {
   console.error(`Error during application startup: ${exc.stack}`)
 });
-
-
-// TODO: RELATION CASCADES
-/// API
-// TODO: attempt to extract postService to common constant
-// TODO: rework entity variables as camelCase, column names as snake_case

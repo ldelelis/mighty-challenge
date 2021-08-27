@@ -3,7 +3,7 @@ import { getRepository, Repository } from "typeorm";
 import { connection } from "core/tests/connection";
 import { Grammer } from "grammer/models";
 import { Post, PostLike } from "post/models";
-import { PostService } from "post/repository";
+import { PostService } from "post/services";
 
 let grammer: Grammer;
 let postRepository: Repository<Post>;

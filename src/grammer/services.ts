@@ -1,6 +1,7 @@
 import { getRepository, Repository } from "typeorm";
 
-import { AuthUserService } from "authentication/repositories";
+import { AuthUserService } from "authentication/services";
+
 
 import { Grammer } from "./models";
 
