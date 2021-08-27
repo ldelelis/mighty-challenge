@@ -13,6 +13,7 @@ RUN yarn build
 FROM node:14-alpine
 
 ENV NODE_ENV=production
+ENV NODE_PATH=/usr/src/app/dist/
 WORKDIR /usr/src/app
 
 RUN apk add --no-cache tini

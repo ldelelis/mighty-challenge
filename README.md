@@ -24,6 +24,20 @@ It is recommended to use [direnv](https://direnv.net/) to manage these in an auo
 2. Start external dependencies: `docker-compose up -d`
 3. Start development server: `yarn dev`
 
+### Bootstrapping the database
+
+TypeORM requires migrations to be applied on the database before using the backend:
+
+`yarn build && NODE_PATH=$PWD/dist/ npx typeorm migration:run`
+
+Whenever a set of entity changes are applied, a new migration should be generated:
+
+`yarn build && NODE_PATH=$PWD/dist/ npx typeorm migration:generate -n <migration name>`
+
+This generates a typescript file in `src/migrations`, which should be versioned.
+
+**NOTE**: in case of running these commands via docker-compose, suffix `-c production` to the previously referred commands
+
 ## Tests
 
 A testing battery is setup for the project via Jest.
